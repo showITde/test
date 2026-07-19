@@ -1,0 +1,26 @@
+bundle:
+  name: test-bundle
+ 
+include:
+  - resources/*.yml
+ 
+variables:
+  job_name:
+    default: cicd_demo_job
+ 
+targets:
+  dev:
+    default: true
+    workspace:
+      root_path: /Workspace/Shared/cicd-demo/dev
+ 
+  test:
+    workspace:
+      root_path: /Workspace/Shared/cicd-demo/test
+ 
+  prod:
+    mode: production
+    workspace:
+      root_path: /Workspace/Shared/cicd-demo/prod
+    run_as:
+      user_name: showitdataengineer@gmail.com

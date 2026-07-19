@@ -1,0 +1,69 @@
+name: Databricks CI/CD
+ 
+on:
+  pull_request:
+    branches: [dev, test, main]
+  push:
+    branches: [dev, test, main]
+ 
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - name: Set target from branch
+        id: target
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then echo "target=prod" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref_name }}" = "test" ]; then echo "target=test" >> $GITHUB_OUTPUT
+          else echo "target=dev" >> $GITHUB_OUTPUT
+          fi
+      - name: Validate bundle
+        env:
+          DATABRICKS_HOST: ${{ secrets.db_h }}
+          DATABRICKS_TOKEN: ${{ secrets.db_t }}
+        run: databricks bundle validate --target ${{ steps.target.outputs.target }}
+ 
+  deploy-dev-test:
+    needs: validate
+    if: github.event_name == 'push' && github.ref_name != 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - name: Set target from branch
+        id: target
+        run: |
+          if [ "${{ github.ref_name }}" = "test" ]; then echo "target=test" >> $GITHUB_OUTPUT
+          else echo "target=dev" >> $GITHUB_OUTPUT
+          fi
+      - name: Deploy bundle
+        env:
+          DATABRICKS_HOST: ${{ secrets.db_h }}
+          DATABRICKS_TOKEN: ${{ secrets.db_t }}
+        run: databricks bundle deploy --target ${{ steps.target.outputs.target }}
+      - name: Run job
+        env:
+          DATABRICKS_HOST: ${{ secrets.db_h }}
+          DATABRICKS_TOKEN: ${{ secrets.db_t }}
+        run: databricks bundle run cicd_demo_job --target ${{ steps.target.outputs.target }}
+ 
+  deploy-prod:
+    needs: validate
+    if: github.event_name == 'push' && github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - name: Deploy bundle
+        env:
+          DATABRICKS_HOST: ${{ secrets.db_h }}
+          DATABRICKS_TOKEN: ${{ secrets.db_t }}
+        run: databricks bundle deploy --target prod
+      - name: Run job
+        env:
+          DATABRICKS_HOST: ${{ secrets.db_h }}
+          DATABRICKS_TOKEN: ${{ secrets.db_t }}
+        run: databricks bundle run cicd_demo_job --target prod

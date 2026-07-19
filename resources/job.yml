@@ -1,0 +1,8 @@
+resources:
+  jobs:
+    cicd_demo_job:
+      name: "${var.job_name}-${bundle.target}"
+      tasks:
+        - task_key: main_task
+          notebook_task:
+            notebook_path: ../src/notebook.py
