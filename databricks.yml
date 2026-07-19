@@ -7,13 +7,11 @@ variables:
  
 targets:
   dev:
-    mode: development
     default: true
     workspace:
       root_path: /Workspace/Shared/cicd-demo/dev
  
   test:
-    mode: development
     workspace:
       root_path: /Workspace/Shared/cicd-demo/test
  
@@ -22,4 +20,4 @@ targets:
     workspace:
       root_path: /Workspace/Shared/cicd-demo/prod
     run_as:
-      user_name: <showitdataengineer@gmail.com>
+      user_name: showitdataengineer@gmail.com
