@@ -5,7 +5,7 @@ print("Hello from CI/CD demo")
 # COMMAND ----------
 
  
-df = spark. Range(10)
+df = spark.range(10)
 df.show()
 
 # COMMAND ----------
