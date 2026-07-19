@@ -1,6 +1,9 @@
 bundle:
   name: test-bundle
  
+include:
+  - resources/*.yml
+ 
 variables:
   job_name:
     default: cicd_demo_job
