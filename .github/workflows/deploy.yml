@@ -21,8 +21,8 @@ jobs:
           fi
       - name: Validate bundle
         env:
-          DATABRICKS_HOST: ${{ secrets.DB_H }}
-          DATABRICKS_TOKEN: ${{ secrets.DB_T }}
+          DATABRICKS_HOST: ${{ secrets.db_h }}
+          DATABRICKS_TOKEN: ${{ secrets.db_t }}
         run: databricks bundle validate --target ${{ steps.target.outputs.target }}
  
   deploy-dev-test:
@@ -40,13 +40,13 @@ jobs:
           fi
       - name: Deploy bundle
         env:
-          DATABRICKS_HOST: ${{ secrets.DB_H }}
-          DATABRICKS_TOKEN: ${{ secrets.DB_T }}
+          DATABRICKS_HOST: ${{ secrets.db_h }}
+          DATABRICKS_TOKEN: ${{ secrets.db_t }}
         run: databricks bundle deploy --target ${{ steps.target.outputs.target }}
       - name: Run job
         env:
-          DATABRICKS_HOST: ${{ secrets.DB_H }}
-          DATABRICKS_TOKEN: ${{ secrets.DB_T }}
+          DATABRICKS_HOST: ${{ secrets.db_h }}
+          DATABRICKS_TOKEN: ${{ secrets.db_t }}
         run: databricks bundle run cicd_demo_job --target ${{ steps.target.outputs.target }}
  
   deploy-prod:
@@ -59,11 +59,11 @@ jobs:
       - uses: databricks/setup-cli@main
       - name: Deploy bundle
         env:
-          DATABRICKS_HOST: ${{ secrets.DB_H }}
-          DATABRICKS_TOKEN: ${{ secrets.DB_T }}
+          DATABRICKS_HOST: ${{ secrets.db_h }}
+          DATABRICKS_TOKEN: ${{ secrets.db_t }}
         run: databricks bundle deploy --target prod
       - name: Run job
         env:
-          DATABRICKS_HOST: ${{ secrets.DB_H }}
-          DATABRICKS_TOKEN: ${{ secrets.DB_T }}
+          DATABRICKS_HOST: ${{ secrets.db_h }}
+          DATABRICKS_TOKEN: ${{ secrets.db_t }}
         run: databricks bundle run cicd_demo_job --target prod
