@@ -1,0 +1,25 @@
+bundle:
+  name: test
+ 
+variables:
+  job_name:
+    default: cicd_demo_job
+ 
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      root_path: /cicd-demo/dev
+ 
+  test:
+    mode: development
+    workspace:
+      root_path: /cicd-demo/test
+ 
+  prod:
+    mode: production
+    workspace:
+      root_path: /cicd-demo/prod
+    run_as:
+      user_name: showitdataengineer@gmail.com
